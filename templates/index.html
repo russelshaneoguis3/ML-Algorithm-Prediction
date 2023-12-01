@@ -44,18 +44,18 @@
         {% if prediction == 'e' %}
             <div class="alert alert-success custom-alert">
                 <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                Edible mushroom!
+                Edible mushroom ✔️
             </div>
         {% elif prediction == 'p' %}
             <div class="alert alert-danger custom-alert">
                 <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                Poisonous mushroom!
+                Poisonous mushroom ⚠️
             </div>
         {% else %}
             <!-- Handle the case when the prediction is unknown or other value -->
             <div class="alert alert-warning custom-alert">
                 <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                Unknown prediction!
+                Unknown prediction 
             </div>
         {% endif %}
     </p>    
