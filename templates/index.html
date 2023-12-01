@@ -1,0 +1,296 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mushroom Classifier</title>
+
+    <!-- Bootstrap Style -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">    
+    <!-- JQUERY -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    
+    <!-- CSS Style -->
+    <link rel="stylesheet" type="text/css" href="static/style.css">
+
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light ">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-2">
+                <li class="nav-item">
+                    <a class="nav-link transition-link" aria-current="page" href="index.html">Mushroom</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link transition-link" aria-current="page" href="index.php">Valorant</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<br>
+<h1 class="text-center mb-4">Mushroom Classifier</h1>
+<center>
+    <p class="text-center mt-4">
+        {% if prediction == 'e' %}
+            <div class="alert alert-success custom-alert">
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                Edible mushroom!
+            </div>
+        {% elif prediction == 'p' %}
+            <div class="alert alert-danger custom-alert">
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                Poisonous mushroom!
+            </div>
+        {% else %}
+            <!-- Handle the case when the prediction is unknown or other value -->
+            <div class="alert alert-warning custom-alert">
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                Unknown prediction!
+            </div>
+        {% endif %}
+    </p>    
+</center>
+<div class="container ">
+    <div class="row">
+        <!-- Left Column -->
+        <div class="col-md-4 mx-auto">
+            <form action="/predict" method="post">
+                <label for="cap-shape" class="form-label"><b>Cap Shape</b></label>
+                <select id="cap-shape" name="cap-shape" class="form-select" required>
+                    <option value="b">b - Bell</option>
+                    <option value="c">c - Conical</option>
+                    <option value="x">x - Convex</option>
+                    <option value="f">f - Flat</option>
+                    <option value="k">k - Knobbed</option>
+                    <option value="s">s - Sunken</option>
+                </select>
+                <br>
+                <label for="cap-surface" class="form-label"><b>Cap-surface</b></label>
+                <select id="cap-surface" name="cap-surface" class="form-select" required>
+                    <option value="f">f - Fibrous</option>
+                    <option value="g">g - Grooves</option>
+                    <option value="y">y - Scaly</option>
+                    <option value="s">s - Smooth</option>
+                </select>
+                <br>
+                <label for="cap-color" class="form-label"><b>Cap-color</b></label>
+                <select id="cap-color" name="cap-color"  class="form-select" required>
+                    <option value="n">n - Brown</option>
+                    <option value="b">b - Buff</option>
+                    <option value="c">c - Cinnamon</option>
+                    <option value="g">g - Gray</option>
+                    <option value="r">r - Green</option>
+                    <option value="p">p - Pink</option>
+                    <option value="u">u - Purple</option>
+                    <option value="e">e - Red</option>
+                    <option value="w">w - White</option>
+                    <option value="y">y - Yellow</option>
+                </select>
+                <br>
+                <label for="bruises" class="form-label"><b>Bruises</b></label>
+                <select id="bruises" name="bruises" class="form-select" required>
+                    <option value="t">t - Bruises</option>
+                    <option value="f">f - No/None</option>
+                </select>
+                <br>
+                <label for="odor" class="form-label"><b>Odor</b></label>
+                <select id="odor" name="odor" class="form-select" required>
+                    <option value="a">a - Almond</option>
+                    <option value="l">l - Anise</option>
+                    <option value="c">c - Creosote</option>
+                    <option value="y">y - Fishy</option>
+                    <option value="f">f - Foul</option>
+                    <option value="m">m - Musty</option>
+                    <option value="n">n - None</option>
+                    <option value="p">p - Pungent</option>
+                    <option value="s">s - Spicy</option>
+                </select>
+                <br>
+                <label for="gill-attachment" class="form-label"><b>Gill-attachment</b></label>
+                <select id="gill-attachment" name="gill-attachment" class="form-select"  required>
+                    <option value="a">a - Attached</option>
+                    <option value="d">d - Descending</option>
+                    <option value="f">f - Free</option>
+                    <option value="n">n - Notched</option>
+                </select>
+                <br>
+                <label for="gill-spacing" class="form-label"><b>Gill-spacing</b></label>
+                <select id="gill-spacing" name="gill-spacing" class="form-select"  required>
+                    <option value="c">c - Closed</option>
+                    <option value="w">w - Crowded</option>
+                    <option value="d">d - Distant</option>
+                </select>
+                <br>
+                <label for="gill-size" class="form-label"><b>Gill-size</b></label>
+                <select id="gill-size" name="gill-size" class="form-select" required>
+                    <option value="b">b - Broad</option>
+                    <option value="n">n - Narrow</option>
+                </select>
+                <br>
+                <label for="gill-color" class="form-label"><b>Gill-color</b></label>
+                <select id="gill-color" name="gill-color"  class="form-select" required>
+                    <option value="k">k - Black</option>
+                    <option value="n">n - Brown</option>
+                    <option value="b">b - Buff</option>
+                    <option value="h">h - Chocolate</option>
+                    <option value="g">g - Gray</option>
+                    <option value="r">r - Green</option>
+                    <option value="o">o - Orange</option>
+                    <option value="p">p - Pink</option>
+                    <option value="u">u - Purple</option>
+                    <option value="e">e - Red</option>
+                    <option value="w">w - White</option>
+                    <option value="y">y - Yellow</option>
+                </select>
+                <br>
+                <label for="stalk-shape" class="form-label"><b>Stalk-shape</b></label>
+                <select id="stalk-shape" name="stalk-shape" class="form-select" required>
+                    <option value="e">e - Enlarging</option>
+                    <option value="t">t - Tapering</option>
+                </select>
+                <br>
+                <label for="stalk-root" class="form-label"><b>Stalk-root</b></label>
+                <select id="stalk-root" name="stalk-root"  class="form-select" required>
+                    <option value="b">b - Bulbous</option>
+                    <option value="c">c - Club</option>
+                    <option value="u">u - Cup</option>
+                    <option value="e">e - Equal</option>
+                    <option value="z">z - Rhizomorphs</option>
+                    <option value="r">r - Rooted</option>
+                    <option value="?">? - Missing</option>
+                </select>
+                <br>
+        
+        </div>
+
+        <!-- Right Column -->
+        <div class="col-md-4 mx-auto">
+            <label for="stalk-surface-above-ring" class="form-label"><b>Stalk-surface-above-ring</b></label>
+            <select id="stalk-surface-above-ring" name="stalk-surface-above-ring" class="form-select" required>
+                <option value="f">f - Fibrous</option>
+                <option value="y">y - Scaly</option>
+                <option value="k">k - Silky</option>
+                <option value="s">s - Smooth</option>
+            </select>
+            <br>
+            <label for="stalk-surface-below-ring" class="form-label"><b>Stalk-surface-below-ring</b></label>
+            <select id="stalk-surface-below-ring" name="stalk-surface-below-ring" class="form-select" required>
+                <option value="f">f - Fibrous</option>
+                <option value="y">y - Scaly</option>
+                <option value="k">k - Silky</option>
+                <option value="s">s - Smooth</option>
+            </select>
+            <br>
+
+            <label for="stalk-color-above-ring" class="form-label"><b>Stalk-color-above-ring</b></label>
+            <select id="stalk-color-above-ring" name="stalk-color-above-ring" class="form-select" required>
+                <option value="n">n - Brown</option>
+                <option value="b">b - Buff</option>
+                <option value="c">c - Cinnamon</option>
+                <option value="g">g - Gray</option>
+                <option value="o">r - Orange</option>
+                <option value="p">p - Pink</option>
+                <option value="e">e - Red</option>
+                <option value="w">w - White</option>
+                <option value="y">y - Yellow</option>
+            </select>
+            <br>
+            <label for="stalk-color-below-ring" class="form-label"><b>Stalk-color-below-ring</b></label>
+            <select id="stalk-color-below-ring" name="stalk-color-below-ring" class="form-select" required>
+                <option value="n">n - Brown</option>
+                <option value="b">b - Buff</option>
+                <option value="c">c - Cinnamon</option>
+                <option value="g">g - Gray</option>
+                <option value="o">r - Orange</option>
+                <option value="p">p - Pink</option>
+                <option value="e">e - Red</option>
+                <option value="w">w - White</option>
+                <option value="y">y - Yellow</option>
+            </select>
+            <br>
+            <label for="veil-type" class="form-label"><b>Veil-type</b></label>
+            <select id="veil-type" name="veil-type" class="form-select" required>
+                <option value="p">p - Partial</option>
+                <option value="u">u - Universal</option>
+            </select>
+            <br>
+            <label for="veil-color" class="form-label"><b>Veil-color</b></label>
+            <select id="veil-color" name="veil-color" class="form-select" required>
+                <option value="n">n - Brown</option>
+                <option value="o">o - Orange</option>
+                <option value="w">w - White</option>
+                <option value="y">y - Yellow</option>
+            </select>
+            <br>
+            <label for="ring-number" class="form-label"><b>Ring-number</b></label>
+            <select id="ring-number" name="ring-number" class="form-select" required>
+                <option value="n">n - None</option>
+                <option value="o">o - One</option>
+                <option value="t">t - Two</option>
+            </select>
+            <br>
+            <label for="ring-type" class="form-label"><b>Ring-type</b></label>
+            <select id="ring-type" name="ring-type" class="form-select" required>
+                <option value="c">c - Cobwebby</option>
+                <option value="e">e - Evanescent</option>
+                <option value="f">f - Flaring</option>
+                <option value="l">l - Large</option>
+                <option value="n">n - None</option>
+                <option value="p">p - Pendant</option>
+                <option value="s">s - Sheathing</option>
+                <option value="z">z - Zone</option>
+            </select>
+            <br>
+            <label for="spore-print-color" class="form-label"><b>Spore-print-color</b></label>
+            <select id="spore-print-color" name="spore-print-color" class="form-select" required>
+                <option value="k">k - Black</option>
+                <option value="n">n - Brown</option>
+                <option value="b">b - Buff</option>
+                <option value="h">h - Chocolate</option>
+                <option value="r">r - Green</option>
+                <option value="o">o - Orange</option>
+                <option value="u">u - Purple</option>
+                <option value="w">w - White</option>
+                <option value="y">y - Yellow</option>
+            </select>
+            <br>
+            <label for="population" class="form-label"><b>Population</b></label>
+            <select id="population" name="population" class="form-select" required>
+                <option value="a">a - Abundant</option>
+                <option value="c">c - Clustered</option>
+                <option value="n">n - Numerous</option>
+                <option value="s">s - Scattered</option>
+                <option value="v">v - Several</option>
+                <option value="y">y - Solitary</option>
+            </select>
+            <br>
+            <label for="habitat" class="form-label"><b>Habitat</b></label>
+            <select id="habitat" name="habitat" class="form-select" required>
+                <option value="g">g - Grasses</option>
+                <option value="l">l - Leaves</option>
+                <option value="m">m - Meadows</option>
+                <option value="p">p - Paths</option>
+                <option value="u">u - Urban</option>
+                <option value="w">w - Waste</option>
+                <option value="d">d - Woods</option>
+            </select>
+            <br>
+            <button type="submit" class="btn btn-outline-primary">Predict</button>
+            </form>
+        </div>
+    </div>
+</div>
+<br>
+
+</body>
+</html>
