@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valorant RR Gain</title>
+
+    <!-- Bootstrap Style -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">    
+    <!-- JQUERY -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <!-- CSS Style -->
+    <link rel="stylesheet" type="text/css" href="static/style2.css">
+
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light ">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-2">
+                <li class="nav-item">
+                    <a class="nav-link transition-link" aria-current="page" href="/">Mushroom</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link transition-link" aria-current="page" href="/valorant">Valorant</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<h1 class="text-center mb-4">Valorant RR gain</h1>
+
+<center>
+    <p class="text-center mt-4">
+            <div class="alert alert-success custom-alert">
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                Elo Gain Predict: {{ prediction2 }}
+            </div>
+    </p>    
+</center>
+
+<div class="container">
+    <div class="row">
+                        <!-- Left Column -->
+                        <div class="col-md-4 mx-auto">
+                            <form action="/predict_valo" method="post">
+                                <label for="ACS" class="form-label"><b>Average Combat Score (ACS)</b></label>
+                                <input id="ACS" name="ACS" class="form-control" required></input>
+                                <br>
+                                <label for="Econ" class="form-label"><b>Economy Rating/Score</b></label>
+                                <input id="Econ" name="Econ" class="form-control" required></input>
+                                <br>
+                                <label for="Enemy-Wons" class="form-label"><b>Enemy Wons (round/s)</b></label>
+                                <input id="Enemy-Wons" name="Enemy-Wons" class="form-control" required></input>
+                                <br>
+                                <label for="First-Bloods" class="form-label"><b>First Blood/s</b></label>
+                                <input id="First-Bloods" name="First-Bloods" class="form-control" required></input>
+                                <br>
+                                <label for="Plants" class="form-label"><b>Spike Plant/s</b></label>
+                                <input id="Plants" name="Plants" class="form-control" required></input>
+                                <br>
+                            </div>
+                        <!-- Right Column -->
+                        <div class="col-md-4 mx-auto">
+                            <label for="Defuses" class="form-label"><b>Spike Defuse/s</b></label>
+                            <input id="Defuses" name="Defuses" class="form-control" required></input>
+                            <br>
+                            <label for="Kills" class="form-label"><b>Kill/s</b></label>
+                            <input id="Kills" name="Kills" class="form-control" required></input>
+                            <br>
+                            <label for="Deaths" class="form-label"><b>Death/s</b></label>
+                            <input id="Deaths" name="Deaths" class="form-control" required></input>
+                            <br>
+                            <label for="Assists" class="form-label"><b>Assist/s</b></label>
+                            <input id="Assists" name="Assists" class="form-control" required></input>
+                            <br>
+                            
+                            <br>
+            <button type="submit" class="btn btn-outline-primary">Predict</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

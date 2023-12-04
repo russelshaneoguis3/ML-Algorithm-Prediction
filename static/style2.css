@@ -11,7 +11,7 @@ h1, h2, h3, h4, h5, h6 {
 --------------------------------------------------------------*/
 
 body {
-    padding-top: 56px; /* Adjust this value based on the height of your navbar */
+    padding-top: 70px; /* Adjust this value based on the height of your navbar */
 }
 
 .navbar {
