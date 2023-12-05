@@ -2,10 +2,25 @@ import os
 import pandas as pd
 from flask import Flask, render_template, request
 import pickle
+from werkzeug.utils import redirect
+from flask_mysqldb import MySQL
+
+#for chart
+import matplotlib.pyplot as plt
+from io import BytesIO
+import base64
+
 
 app = Flask(__name__)
 
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = '123456'
+app.config['MYSQL_DB'] = 'ml-algo'
+
+mysql = MySQL(app)
 # Load the Mushroom model
+
 model_mushroom_path = 'mushroom_classifier_model.pkl'
 with open(model_mushroom_path, 'rb') as model_file_mushroom:
     model_mushroom = pickle.load(model_file_mushroom)
@@ -89,5 +104,65 @@ def predict_valo():
 def valo():
     return render_template('valorant.html')
 
+@app.route('/eda')
+def eda():
+    
+    # Fetch Mushroom data
+    cur_mushroom = mysql.connection.cursor()
+    cur_mushroom.execute("SELECT * FROM mushrooms")
+    mushrooms_data = cur_mushroom.fetchall()
+    cur_mushroom.close()
+
+    # Fetch Valorant data
+    cur_valorant = mysql.connection.cursor()
+    cur_valorant.execute("SELECT * FROM valorant")
+    valorant_data = cur_valorant.fetchall()
+    cur_valorant.close()
+
+    return render_template('eda.html', mushrooms=mushrooms_data, valorant=valorant_data)
+
+@app.route('/chart')
+def chart():
+    # Fetch data from MySQL for Elo Gain
+    cur_elo_gain = mysql.connection.cursor()
+    cur_elo_gain.execute("SELECT `Elo-Gain` FROM valorant")
+    elo_gain_data = cur_elo_gain.fetchall()
+    cur_elo_gain.close()
+
+    # Fetch data from MySQL for Mushroom class distribution
+    cur_class_distribution = mysql.connection.cursor()
+    cur_class_distribution.execute("SELECT `class` FROM mushrooms")
+    class_distribution_data = cur_class_distribution.fetchall()
+    cur_class_distribution.close()
+
+    # Convert data to DataFrames
+    df_elo_gain = pd.DataFrame(elo_gain_data, columns=['Elo Gain'])
+    df_class_distribution = pd.DataFrame(class_distribution_data, columns=['class'])
+
+    # Plotting Histogram for Elo Gain
+    plt.figure(figsize=(8, 6))
+    df_elo_gain.hist('Elo Gain')
+    plt.xlabel('Elo Gains')
+    plt.ylabel('Count')
+    plt.title('Distribution of Elo Gains')
+    histogram_img = BytesIO()
+    plt.savefig(histogram_img, format='png')
+    histogram_img.seek(0)
+    plt.clf()
+
+    # Plotting Pie Chart for Mushroom class distribution
+    class_counts = df_class_distribution['class'].value_counts()
+    plt.figure(figsize=(8, 6))
+    plt.pie(class_counts, labels=['Edible (e)', 'Poisonous (p)'], colors=['green', 'red'], autopct='%1.1f%%', startangle=90)
+    plt.title('Mushroom Distribution of Classes')
+    pie_chart_img = BytesIO()
+    plt.savefig(pie_chart_img, format='png')
+    pie_chart_img.seek(0)
+
+    # Pass the images as base64-encoded strings to the template
+    histogram_encoded = base64.b64encode(histogram_img.read()).decode('utf-8')
+    pie_chart_encoded = base64.b64encode(pie_chart_img.read()).decode('utf-8')
+
+    return render_template('chart.html', histogram_img=histogram_encoded, pie_chart_img=pie_chart_encoded)
 if __name__ == '__main__':
     app.run(debug=True)
