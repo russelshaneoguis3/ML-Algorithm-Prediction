@@ -164,5 +164,6 @@ def chart():
     pie_chart_encoded = base64.b64encode(pie_chart_img.read()).decode('utf-8')
 
     return render_template('chart.html', histogram_img=histogram_encoded, pie_chart_img=pie_chart_encoded)
+
 if __name__ == '__main__':
     app.run(debug=True)
